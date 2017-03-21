@@ -1,0 +1,73 @@
+package eecs448_lab7;
+
+
+public class Matrix extends matrixMain{
+	int MaxSize = 10;
+	double[][] m_data = new double[MaxSize][MaxSize];
+	int n = 0;
+		
+	public Matrix(int size){
+		n = size;
+	}
+		
+		public double determinant()
+		{
+			double det = 0.0;
+			
+			if (n == 1)
+			{
+				det = m_data[0][0];
+			}
+			else if (n == 2)
+			{
+				det = m_data[0][0] * m_data[1][1] - m_data[0][1] * m_data[1][0];
+			}
+			else
+			{
+				for (int i = 0; i < n; ++i)
+				{
+					det += Math.pow(-1.0, (double)i) * m_data[0][i] * subMatrix(0, i).determinant();
+				}
+			}
+			
+			return det;
+		}
+
+		public Matrix inverse(){
+			Matrix inv(n);
+			double det = determinant();
+			
+			for (int i = 0; i < n; ++i)
+			{
+				for (int j = 0; j < n; ++j)
+				{
+					inv.m_data[i][j] = Math.pow(-1.0, (double)i + j) * subMatrix(j, i).determinant() / det;
+				}
+			}
+			
+			return inv;
+		}
+
+		public Matrix subMatrix(int r, int c)
+		{
+			Matrix sub(n - 1);
+			
+			int row = 0; 
+			for (int i = 0; i < n; ++i)
+			{
+				if (i == r) continue;
+				
+				int col = 0;
+				for (int j = 0; j < n; ++j)
+				{
+					if (j == c) continue;
+					
+					sub.mdata[row][col] = mdata[i][j];
+					++col;
+				}
+				++row;
+			}
+			return sub;
+		}
+	}
+}
