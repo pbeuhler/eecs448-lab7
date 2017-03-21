@@ -1,5 +1,10 @@
 package eecs448_lab7;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.*;
+
+
 
 public class matrixMain {
 
@@ -8,20 +13,24 @@ public class matrixMain {
 			// Confirm command-line parameters
 			if (args.length < 3)
 			{
-				cerr << "Error - Expected usage: ./main input.txt output.txt" << endl;
-				return 1;
+				System.out.println("Error - Expected usage: ./main input.txt output.txt");
 			}
 			
 			// Initialize file streams
-			ifstream in(argv[1]);
-			ofstream out(argv[2]);
+		    FileInputStream in = null;
+		    FileOutputStream out = null;
+			in = new FileInputStream(args[1]);
+			out = new FileOutputStream(args[2]);
 			
 			// Process commands
 			int n;
-			while (in >> n && n > 0)
+			int content;
+			Matrix m;
+			while ((content = in.read()) != -1 && n > 0)
 			{
-				Matrix m(n);
-				in >> m;
+				m = new Matrix(n);
+				//in >> m;
+				m = in.read();
 				
 				out << "M = " << endl;
 				out << m << endl;
@@ -36,9 +45,5 @@ public class matrixMain {
 					out << "Minv = " << endl << inv << endl;
 				}
 			}
-			
-			return 0;
 		}
 	}
-
-}
