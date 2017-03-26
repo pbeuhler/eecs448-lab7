@@ -3,11 +3,36 @@ package eecs448_lab7;
 
 public class Matrix{
 	public static int MaxSize = 10;
-	private double[][] m_data = new double[MaxSize][MaxSize];
+	private double m_data[][] = new double[MaxSize][MaxSize];
 	public int n = 0;
+	
+	//default constructor
+	public Matrix(){
 		
+	}
+		
+	//constructor with size input
 	public Matrix(int _n){
 		n = _n;
+	}
+	
+	//populate 2d array part of matrix object with doubles
+	public void setData(double[][] inArray){
+		for(int i = 0; i<n; i++){
+			for(int j = 0; j<n; j++){
+				m_data[i][j] = inArray[i][j];
+			}
+		}
+	}
+	
+	//retrieve the 2d array
+	public double[][] getData(){
+		return m_data;
+	}
+	
+	//return size of square matrix
+	public int getSize(Matrix m){
+		return n;
 	}
 		
 	public double determinant()
@@ -69,4 +94,16 @@ public class Matrix{
 		}
 		return sub;
 	}
+	
+	public static String printMatrix(int size, Matrix m){
+		String output = "";
+		for(int i = 0; i<size; i++){
+			for(int j = 0; j<size; j++){
+				output = output + m.getData()[i][j]+" ";
+			}
+			output = output+"\n";
+		}
+		return output;
+	}
+	
 }
