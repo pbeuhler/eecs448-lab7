@@ -1,49 +1,117 @@
 package eecs448_lab7;
 
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.*;
+import java.util.Scanner;
 
 
 
 public class matrixMain {
 
-	public static void main(String[] args) {
-
-			// Confirm command-line parameters
-			if (args.length < 3)
-			{
-				System.out.println("Error - Expected usage: ./main input.txt output.txt");
-			}
+	public static void main(String[] args) throws FileNotFoundException {
 			
 			// Initialize file streams
-		    FileInputStream in = null;
-		    FileOutputStream out = null;
-			in = new FileInputStream(args[1]);
-			out = new FileOutputStream(args[2]);
+		    File in = new File("input.txt");
+			@SuppressWarnings("resource")
+			Scanner scanner = new Scanner(in);
 			
 			// Process commands
 			int n;
-			int content;
+			int temp = 0;
 			Matrix m;
-			while ((content = in.read()) != -1 && n > 0)
-			{
-				m = new Matrix(n);
-				//in >> m;
-				m = in.read();
-				
-				out << "M = " << endl;
-				out << m << endl;
-				
-				double det = m.determinant();
-				out << "det(M) = " << det << endl << endl;
-				
-				if (det != 0)
+			try{
+			    PrintWriter writer = new PrintWriter("outfile.txt", "UTF-8");			
+			
+				while (scanner.hasNextLine())
 				{
-					Matrix inv = m.inverse();
-
-					out << "Minv = " << endl << inv << endl;
+					n = scanner.nextInt();
+					if(n >0){
+						
+						m = new Matrix(n);
+						double tempArray[][] = new double[n][n];
+		
+						//in >> m;
+						//populate local 2d array
+						for(int i = 0; i<n; i++){
+							for(int j = 0; j<n; j++){
+								temp = scanner.nextInt();
+								tempArray[i][j] = temp;
+							}
+						}		
+						
+						//append data to output file
+					    writer.println("M = ");
+						for(int i = 0; i<n; i++){
+							for(int j = 0; j<n; j++){
+							    writer.print(tempArray[i][j]+" ");
+							}
+						    writer.println(" ");
+						}
+						
+						//transfer data from local 2d array to matrix object
+						m.setData(tempArray);
+						System.out.println("M = \n"+printMatrix(n,m));
+	
+						double det = m.determinant();
+					    writer.println("det(M) = " + det);
+						System.out.println("M determinant = \n"+ det+"\n");
+	
+						
+						if (det != 0)
+						{
+							Matrix inv = m.inverse();
+							System.out.println("M inverse = \n"+ printMatrix(n, inv)+"\n");
+						    writer.println("Inv(M) = ");
+							for(int i = 0; i<n; i++){
+								for(int j = 0; j<n; j++){
+								    writer.print(m.getData()[i][j]);
+								}
+							    writer.println("");
+							}
+						}
+					}
 				}
-			}
-		}
+			    writer.close();
+
+			} 
+			
+			catch (IOException e) {
+				System.out.println("File could not be written");
+				}
+			
+			
+			
+			Matrix m2;
+			double[][] inputs = new double[3][3];
+			
+			//insert values into new matrix
+			inputs[0][0] = 5;
+			inputs[0][1] = 4;
+			inputs[0][2] = 3;
+			inputs[1][0] = 6;
+			inputs[1][1] = 9;
+			inputs[1][2] = 1;
+			inputs[2][0] = 2;
+			inputs[2][1] = 5;
+			inputs[2][2] = 3;
+			
+			m2 = new Matrix(3);
+			
+			m2.setData(inputs);
+			
+			double det = m2.determinant();
+			System.out.println("M2 determinant = \n"+ det+"\n");
+			
 	}
+	
+	//function for printing to screen
+	public static String printMatrix(int size, Matrix m){
+		String output = "";
+		for(int i = 0; i<size; i++){
+			for(int j = 0; j<size; j++){
+				output = output + m.getData()[i][j]+" ";
+			}
+			output = output+"\n";
+		}
+		return output;
+	}
+}
